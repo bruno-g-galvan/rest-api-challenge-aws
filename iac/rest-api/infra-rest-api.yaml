@@ -16,7 +16,7 @@ Parameters:
   MasterUserPassword:
     Description: The master password for the database
     Type: String
-    Default: admin
+    Default: adminadmin
     NoEcho: true
   DBInstanceClass:
     Description: The database instance type
