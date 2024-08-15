@@ -45,45 +45,45 @@ Resources:
             Resource: "*"
           - Effect: Allow 
             Action:
-              - rds:CreateDBInstance
-              - rds:DescribeDBInstances
-              - rds:DeleteDBInstance
-              - rds:ModifyDBInstance
-              - rds:RebootDBInstance
-              - rds:CreateDBSubnetGroup
-              - rds:DescribeDBSubnetGroups
-              - rds:ModifyDBSubnetGroup
-              - rds:DeleteDBSubnetGroup
-              - rds:CreateOptionGroup
-              - rds:DescribeOptionGroups
-              - rds:ModifyOptionGroup
-              - rds:DeleteOptionGroup
-              - rds:CreateDBParameterGroup
-              - rds:DescribeDBParameterGroups
-              - rds:ModifyDBParameterGroup
-              - rds:DeleteDBParameterGroup
-              - rds:DescribeDBEngineVersions
-              - rds:DescribeDBClusterSnapshots
-              - rds:DescribeDBSnapshots
-              - rds:ListTagsForResource
-              - rds:AddTagsToResource
-              - rds:RemoveTagsFromResource
+            - rds:CreateDBInstance
+            - rds:DescribeDBInstances
+            - rds:DeleteDBInstance
+            - rds:ModifyDBInstance
+            - rds:RebootDBInstance
+            - rds:CreateDBSubnetGroup
+            - rds:DescribeDBSubnetGroups
+            - rds:ModifyDBSubnetGroup
+            - rds:DeleteDBSubnetGroup
+            - rds:CreateOptionGroup
+            - rds:DescribeOptionGroups
+            - rds:ModifyOptionGroup
+            - rds:DeleteOptionGroup
+            - rds:CreateDBParameterGroup
+            - rds:DescribeDBParameterGroups
+            - rds:ModifyDBParameterGroup
+            - rds:DeleteDBParameterGroup
+            - rds:DescribeDBEngineVersions
+            - rds:DescribeDBClusterSnapshots
+            - rds:DescribeDBSnapshots
+            - rds:ListTagsForResource
+            - rds:AddTagsToResource
+            - rds:RemoveTagsFromResource
             Resource: "*"
           - Effect: Allow
             Action:
-              - ec2:DescribeVpcs
-              - ec2:DescribeSubnets
-              - ec2:DescribeSecurityGroups
-              - ec2:DescribeNetworkInterfaces
+            - ec2:DescribeVpcs
+            - ec2:DescribeSubnets
+            - ec2:DescribeSecurityGroups
+            - ec2:DescribeNetworkInterfaces
             Resource: "*"
           - Effect: Allow
             Action:
-              - cloudformation:CreateStack
-              - cloudformation:DescribeStacks
-              - cloudformation:UpdateStack
-              - cloudformation:DeleteStack
-              - cloudformation:DescribeStackEvents
-              - cloudformation:DescribeStackResources
+            - cloudformation:CreateStack
+            - cloudformation:DescribeStacks
+            - cloudformation:UpdateStack
+            - cloudformation:DeleteStack
+            - cloudformation:DescribeStackEvents
+            - cloudformation:DescribeStackResources
             Resource: "*"
 
       ManagedPolicyArns:
