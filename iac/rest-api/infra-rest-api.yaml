@@ -117,6 +117,8 @@ Resources:
       OptionGroupName: default:mysql-8-0
       DBParameterGroupName: default.mysql8.0
       MonitoringInterval: 60
+      MonitoringRoleArn: !ImportValue "MonitoringRoleArn"
       AutoMinorVersionUpgrade: true
       DeletionProtection: false
+
 

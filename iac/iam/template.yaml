@@ -93,6 +93,30 @@ Resources:
         Value: "CloudFormation"
       - Key: "StackName"
         Value: !Ref "AWS::StackName"
+  
+  MonitoringRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub "${RoleBaseName}-MonitoringRole-${AWS::Region}"
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+        - Effect: "Allow"
+          Principal:
+            Service: "rds.amazonaws.com"
+          Action:
+          - "sts:AssumeRole"
+      Policies:
+      - PolicyName: "RDSMonitoringPolicy"
+        PolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+          - Effect: "Allow"
+            Action:
+            - "logs:PutLogEvents"
+            - "logs:CreateLogStream"
+            - "logs:CreateLogGroup"
+            Resource: "*"
 
 Outputs:
   GitSyncRoleName:
@@ -105,6 +129,16 @@ Outputs:
     Value: !GetAtt GitSyncRole.Arn
     Export:
       Name: !Sub "GitSyncRoleArn"
+  MonitoringRoleName:
+    Description: "The role name."
+    Value: !Ref MonitoringRole
+    Export:
+      Name: !Sub "${AWS::StackName}-MonitoringRoleName"
+  MonitoringRoleArn:
+    Description: "The role ARN."
+    Value: !GetAtt MonitoringRole.Arn
+    Export:
+      Name: !Sub "MonitoringRoleArn"
 
 Metadata:
   AWS::CloudFormation::Interface:

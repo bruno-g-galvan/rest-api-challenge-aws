@@ -21,8 +21,8 @@ Resources:
   GitHubSyncConfiguration:
     Type: "AWS::CodeStarConnections::SyncConfiguration"
     Properties:
-      RepositoryLinkId: !ImportValue "GitHubRepositoryLinkId" #From connection.yaml
-      RoleArn: !ImportValue "GitSyncRoleArn" #From git-sync.yaml
+      RepositoryLinkId: !ImportValue "GitHubRepositoryLinkId" 
+      RoleArn: !ImportValue "GitSyncRoleArn" 
       Branch: !Ref BranchName
       ConfigFile: !Ref ConfigFile
       ResourceName: !Ref ResourceName
