@@ -12,9 +12,11 @@ Parameters:
   MasterUsername:
     Description: The master username for the database
     Type: String
+    Default: admin
   MasterUserPassword:
     Description: The master password for the database
     Type: String
+    Default: admin
     NoEcho: true
   DBInstanceClass:
     Description: The database instance type
