@@ -10,8 +10,6 @@ Parameters:
     Description: "The base name for the role that we are creating."
     Default: "git-sync-role"
 
-
-
 Resources:
   GitSyncRole:
     Type: "AWS::IAM::Role"
@@ -29,7 +27,6 @@ Resources:
             - "rds.amazonaws.com"
           Action:
           - "sts:AssumeRole"
-
       Policies:
       - PolicyName: "SetupServiceRole"
         PolicyDocument:
@@ -91,6 +88,8 @@ Resources:
       - "arn:aws:iam::aws:policy/AWSCloudFormationFullAccess"
       - "arn:aws:iam::aws:policy/AWSCodePipeline_FullAccess"
       - "arn:aws:iam::aws:policy/IAMFullAccess"
+      - "arn:aws:iam::aws:policy/AmazonRDSFullAccess"
+      - "arn:aws:iam::aws:policy/AmazonEC2FullAccess"
       Tags:
       - Key: "ManagedBy"
         Value: "CloudFormation"
