@@ -117,7 +117,7 @@ Resources:
       OptionGroupName: default:mysql-8-0
       DBParameterGroupName: default.mysql8.0
       MonitoringInterval: 60
-      MonitoringRoleArn: !GetAtt MonitoringRole.Arn
+      MonitoringRoleArn: "arn:aws:iam::316328384763:role/rds-monitoring-role"
       AutoMinorVersionUpgrade: true
       DeletionProtection: false
 
