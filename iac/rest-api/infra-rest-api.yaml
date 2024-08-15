@@ -45,7 +45,7 @@ Parameters:
     Default: default-vpc-09b1c5d0158a329a3
   ProjectName:
     Type: "String"
-    Default: "rest-api"
+    Default: "rest-api-test"
   DeploymentBucketName:
     Type: "String"
     Default: "rest-api-deployment-${AWS::AccountId}-us-east-1"
