@@ -43,7 +43,7 @@ Resources:
             Action:
             - "codestar-connections:*"
             Resource: "*"
-          - Effect: Allow
+          - Effect: Allow 
             Action:
               - rds:CreateDBInstance
               - rds:DescribeDBInstances
@@ -108,7 +108,7 @@ Outputs:
     Value: !GetAtt GitSyncRole.Arn
     Export:
       Name: !Sub "GitSyncRoleArn"
-      
+
 Metadata:
   AWS::CloudFormation::Interface:
     ParameterGroups:
