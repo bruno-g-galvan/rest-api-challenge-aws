@@ -8,7 +8,7 @@ Parameters:
   DBName:
     Description: The name of the database
     Type: String
-    Default: rest-api-db
+    Default: RestApiDBInstance
   MasterUsername:
     Description: The master username for the database
     Type: String
