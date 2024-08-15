@@ -22,7 +22,7 @@ Parameters:
   RepositoryName:
     Type: "String"
     Description: "The name of the GitHub repository."
-    Default: "infra-rest-api-test"
+    Default: "rest-api-globant-challenge"
   CacheControl: 
     Type: "String"
     Description: "The Cache-Control header value applied to files coming from the build process."
