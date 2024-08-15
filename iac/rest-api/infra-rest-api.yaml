@@ -30,3 +30,28 @@ Resources:
         - Key: "datalake"
           Value: !Ref ProjectName
 
+  ArtifactsBucket:
+    Type: "AWS::S3::Bucket"
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      BucketName: !Sub "${ProjectName}-artifacts-${AWS::AccountId}-${AWS::Region}"
+      AccessControl: Private
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: True
+        BlockPublicPolicy: True
+        IgnorePublicAcls: True
+        RestrictPublicBuckets: True
+      VersioningConfiguration:
+        Status: Enabled
+      LifecycleConfiguration:
+        Rules:
+          - Id: DeleteOldVersions
+            Prefix: /
+            Status: Enabled
+            ExpiredObjectDeleteMarker: True
+            NoncurrentVersionExpiration:
+              NoncurrentDays: 7
+      Tags:
+        - Key: "datalake"
+          Value: !Ref ProjectName
