@@ -1,4 +1,4 @@
-Description: "Create a CodeStar Connection to GitHub (v1.1.0)"
+Description: "Create a CodeStar Connection to GitHub"
 
 Parameters:
   # General Configuration
