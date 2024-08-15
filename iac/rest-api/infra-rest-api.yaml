@@ -1,18 +1,51 @@
 AWSTemplateFormatVersion: '2010-09-09'
 
 Parameters:
-  DBInstanceName:
+  DBInstanceIdentifier:
+    Description: The database instance identifier
     Type: String
-  DBSecretName:
+    Default: rest-api-db-instance
+  DBName:
+    Description: The name of the database
     Type: String
-    Default: "rds-db-credentials"
+    Default: rest-api-db
+  MasterUsername:
+    Description: The master username for the database
+    Type: String
+  MasterUserPassword:
+    Description: The master password for the database
+    Type: String
+    NoEcho: true
+  DBInstanceClass:
+    Description: The database instance type
+    Type: String
+    Default: db.t3.micro
+    AllowedValues:
+      - db.t3.micro
+      - db.t3.small
+      - db.t3.medium
+      - db.m5.large
+    ConstraintDescription: Must be a valid RDS DB instance class.
+  AllocatedStorage:
+    Description: The size of the database (Gb)
+    Type: Number
+    Default: 20
+    MinValue: 20
+    MaxValue: 65536
+    ConstraintDescription: Must be between 20 and 65536 GB.
+  VPCSecurityGroupIds:
+    Description: The VPC security groups to assign to the RDS instance
+    Type: List<AWS::EC2::SecurityGroup::Id>
+    Default: sg-016569f907c4f7c22
+  DBSubnetGroupName:
+    Description: The subnet group for the database
+    Type: String
+    Default: default-vpc-09b1c5d0158a329a3
   ProjectName:
     Type: "String"
-    # This gets replaced by the build script
     Default: "rest-api"
   DeploymentBucketName:
     Type: "String"
-    # This gets replaced by the build script
     Default: "rest-api-deployment-${AWS::AccountId}-us-east-1"
     Description: Enter the existing AWS bucket were the artifacts for deployment are uploaded.
 
@@ -63,30 +96,39 @@ Resources:
 
   DBInstance:
     Type: AWS::RDS::DBInstance
-    Properties:
-      DBName: !Ref DBInstanceName
-      MasterUsername: !GetAtt DBSecret.SecretString.username
-      MasterUserPassword: !GetAtt DBSecret.SecretString.password
-      Engine: MySQL
-      DBInstanceClass: db.t2.micro
-      StorageType: gp2
-      PubliclyAccessible: True
-      AllocatedStorage: "20"
-      DBInstanceIdentifier: !Join ["-", [ "rest-api-instance", !Ref "AWS::Region" ]]
-      AvailabilityZone: !Select [1, !GetAZs ""]
-
-  DBSecret:
-    Type: AWS::SecretsManager::Secret
-    Properties:
-      Name: !Ref DBSecretName
-      Description: "Credentials for RDS DB instance"
-      SecretString: !Sub |
-        {
-          "username": "${DBInstanceUser}",
-          "password": "${DBInstancePass}"
-        }
+    Properties: 
+      DBInstanceIdentifier: !Ref DBInstanceIdentifier
+      DBName: !Ref DBName
+      MasterUsername: !Ref MasterUsername
+      MasterUserPassword: !Ref MasterUserPassword
+      DBInstanceClass: !Ref DBInstanceClass
+      AllocatedStorage: !Ref AllocatedStorage
+      Engine: "mysql"
+      EngineVersion: "8.0.35"
+      VPCSecurityGroups: !Ref VPCSecurityGroupIds
+      DBSubnetGroupName: !Ref DBSubnetGroupName
+      PubliclyAccessible: false
+      StorageEncrypted: false
+      BackupRetentionPeriod: 7
+      PreferredBackupWindow: "07:00-09:00"
+      Port: 3306
+      OptionGroupName: default:mysql-8-0
+      DBParameterGroupName: default.mysql8.0
+      MonitoringInterval: 60
+      AutoMinorVersionUpgrade: true
+      DeletionProtection: false
 
 Outputs:
   DBSecretArn:
     Description: "ARN of the Secret storing the DB credentials"
     Value: !Ref DBSecret
+  DBInstanceEndpoint:
+    Description: The connection endpoint for the RDS instance
+    Value: !GetAtt MyDBInstance.Endpoint.Address
+    Export:
+      Name: MyDBInstanceEndpoint
+  DBInstancePort:
+    Description: The port number for the RDS instance
+    Value: !GetAtt MyDBInstance.Endpoint.Port
+    Export:
+      Name: MyDBInstancePort
