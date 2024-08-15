@@ -1,0 +1,77 @@
+Description: "Create a CodeStar Connection to GitHub (v1.1.0)"
+
+Parameters:
+  # General Configuration
+  SuggestedStackName:
+    Type: "String"
+    Description: "If creating through the AWS Console, this is the suggested stack name.  Copy and paste this value for the stack name."
+    Default: "connection-pipeline-stack"
+  ConnectionName:
+    Type: "String"
+    Description: "The name of the CodeStar Connection."
+    Default: "infra-rest-api-conn-github"
+  OwnerId:
+    Type: "String"
+    Description: "The GitHub Owner ID."
+    Default: "bruno-g-galvan"
+  RepositoryName:
+    Type: "String"
+    Description: "The name of the GitHub repository."
+    Default: "infra-rest-api-test"
+    
+Resources:
+  GitHubConnection:
+    Type: "AWS::CodeStarConnections::Connection"
+    Properties:
+      ConnectionName: !Ref ConnectionName
+      ProviderType: "GitHub"
+      Tags:
+      - Key: "StackName"
+        Value: !Ref "AWS::StackName"
+  GitHubRepositoryLink:
+    Type: "AWS::CodeStarConnections::RepositoryLink"
+    Properties:
+      ConnectionArn: !Ref GitHubConnection
+      OwnerId: !Ref OwnerId
+      RepositoryName: !Ref RepositoryName
+      Tags:
+      - Key: "ManagedBy"
+        Value: "CloudFormation"
+      - Key: "StackName"
+        Value: !Ref "AWS::StackName"
+Outputs:
+  GitHubConnectionArn:
+    Description: "The CodeStar Connection ARN."
+    Value: !Ref GitHubConnection
+    Export:
+      Name: !Sub "GitHubConnectionArn"
+  GitHubRepositoryLinkArn:
+    Description: "The GitHub Repository Link ARN."
+    Value: !Ref GitHubRepositoryLink
+    Export:
+      Name: !Sub "${AWS::StackName}-GitHubRepositoryLinkArn"
+  GitHubRepositoryLinkId:
+    Description: "The GitHub Repository Link ID."
+    Value: !GetAtt GitHubRepositoryLink.RepositoryLinkId
+    Export:
+      Name: !Sub "GitHubRepositoryLinkId"
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+    - Label:
+        default: "General Configuration"
+      Parameters:
+      - SuggestedStackName
+      - ConnectionName
+      - OwnerId
+      - RepositoryName
+    ParameterLabels:
+      # General Configuration
+      SuggestedStackName:
+        default: "Suggested Stack Name:"
+      ConnectionName:
+        default: "Connection Name:"
+      OwnerId:
+        default: "Owner ID:"
+      RepositoryName:
+        default: "Repository Name:"
