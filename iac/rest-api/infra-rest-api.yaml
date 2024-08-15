@@ -121,9 +121,6 @@ Resources:
       DeletionProtection: false
 
 Outputs:
-  DBSecretArn:
-    Description: "ARN of the Secret storing the DB credentials"
-    Value: !Ref DBSecret
   DBInstanceEndpoint:
     Description: The connection endpoint for the RDS instance
     Value: !GetAtt MyDBInstance.Endpoint.Address
