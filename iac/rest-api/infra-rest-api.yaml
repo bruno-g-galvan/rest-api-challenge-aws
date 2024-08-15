@@ -120,14 +120,3 @@ Resources:
       AutoMinorVersionUpgrade: true
       DeletionProtection: false
 
-  Outputs:
-    DBInstanceEndpoint:
-      Description: The connection endpoint for the RDS instance
-      Value: !GetAtt DBInstance.Endpoint.Address
-      Export:
-        Name: DBInstanceEndpoint
-    DBInstancePort:
-      Description: The port number for the RDS instance
-      Value: !GetAtt DBInstance.Endpoint.Port
-      Export:
-        Name: DBInstancePort
