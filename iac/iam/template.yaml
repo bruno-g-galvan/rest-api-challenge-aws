@@ -88,8 +88,6 @@ Resources:
       - "arn:aws:iam::aws:policy/AWSCloudFormationFullAccess"
       - "arn:aws:iam::aws:policy/AWSCodePipeline_FullAccess"
       - "arn:aws:iam::aws:policy/IAMFullAccess"
-      - "arn:aws:iam::aws:policy/AmazonRDSFullAccess"
-      - "arn:aws:iam::aws:policy/AmazonEC2FullAccess"
       Tags:
       - Key: "ManagedBy"
         Value: "CloudFormation"

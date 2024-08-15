@@ -96,38 +96,38 @@ Resources:
         - Key: "datalake"
           Value: !Ref ProjectName
 
-  #DBInstance:
-  #  Type: AWS::RDS::DBInstance
-  #  Properties: 
-  #    DBInstanceIdentifier: !Ref DBInstanceIdentifier
-  #    DBName: !Ref DBName
-  #    MasterUsername: !Ref MasterUsername
-  #    MasterUserPassword: !Ref MasterUserPassword
-  #    DBInstanceClass: !Ref DBInstanceClass
-  #    AllocatedStorage: !Ref AllocatedStorage
-  #    Engine: "mysql"
-  #    EngineVersion: "8.0.35"
-  #    VPCSecurityGroups: !Ref VPCSecurityGroupIds
-  #    DBSubnetGroupName: !Ref DBSubnetGroupName
-  #    PubliclyAccessible: false
-  #    StorageEncrypted: false
-  #    BackupRetentionPeriod: 7
-  #    PreferredBackupWindow: "07:00-09:00"
-  #    Port: 3306
-  #    OptionGroupName: default:mysql-8-0
-  #    DBParameterGroupName: default.mysql8.0
-  #    MonitoringInterval: 60
-  #    AutoMinorVersionUpgrade: true
-  #    DeletionProtection: false
+  DBInstance:
+    Type: AWS::RDS::DBInstance
+    Properties: 
+      DBInstanceIdentifier: !Ref DBInstanceIdentifier
+      DBName: !Ref DBName
+      MasterUsername: !Ref MasterUsername
+      MasterUserPassword: !Ref MasterUserPassword
+      DBInstanceClass: !Ref DBInstanceClass
+      AllocatedStorage: !Ref AllocatedStorage
+      Engine: "mysql"
+      EngineVersion: "8.0.35"
+      VPCSecurityGroups: !Ref VPCSecurityGroupIds
+      DBSubnetGroupName: !Ref DBSubnetGroupName
+      PubliclyAccessible: false
+      StorageEncrypted: false
+      BackupRetentionPeriod: 7
+      PreferredBackupWindow: "07:00-09:00"
+      Port: 3306
+      OptionGroupName: default:mysql-8-0
+      DBParameterGroupName: default.mysql8.0
+      MonitoringInterval: 60
+      AutoMinorVersionUpgrade: true
+      DeletionProtection: false
 
-#Outputs:
-#  DBInstanceEndpoint:
-#    Description: The connection endpoint for the RDS instance
-#    Value: !GetAtt DBInstance.Endpoint.Address
-#    Export:
-#      Name: DBInstanceEndpoint
-#  DBInstancePort:
-#    Description: The port number for the RDS instance
-#    Value: !GetAtt DBInstance.Endpoint.Port
-#    Export:
-#      Name: DBInstancePort
+  Outputs:
+    DBInstanceEndpoint:
+      Description: The connection endpoint for the RDS instance
+      Value: !GetAtt DBInstance.Endpoint.Address
+      Export:
+        Name: DBInstanceEndpoint
+    DBInstancePort:
+      Description: The port number for the RDS instance
+      Value: !GetAtt DBInstance.Endpoint.Port
+      Export:
+        Name: DBInstancePort
