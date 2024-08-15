@@ -1,14 +1,19 @@
 AWSTemplateFormatVersion: '2010-09-09'
 
 Parameters:
+  DBInstanceName:
+    Type: String
+  DBSecretName:
+    Type: String
+    Default: "rds-db-credentials"
   ProjectName:
     Type: "String"
     # This gets replaced by the build script
-    Default: "rest-api-test"
+    Default: "rest-api"
   DeploymentBucketName:
     Type: "String"
     # This gets replaced by the build script
-    Default: "rest-api-test-deployment-${AWS::AccountId}-us-east-1"
+    Default: "rest-api-deployment-${AWS::AccountId}-us-east-1"
     Description: Enter the existing AWS bucket were the artifacts for deployment are uploaded.
 
 Resources:
@@ -55,3 +60,33 @@ Resources:
       Tags:
         - Key: "datalake"
           Value: !Ref ProjectName
+
+  DBInstance:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBName: !Ref DBInstanceName
+      MasterUsername: !GetAtt DBSecret.SecretString.username
+      MasterUserPassword: !GetAtt DBSecret.SecretString.password
+      Engine: MySQL
+      DBInstanceClass: db.t2.micro
+      StorageType: gp2
+      PubliclyAccessible: True
+      AllocatedStorage: "20"
+      DBInstanceIdentifier: !Join ["-", [ "rest-api-instance", !Ref "AWS::Region" ]]
+      AvailabilityZone: !Select [1, !GetAZs ""]
+
+  DBSecret:
+    Type: AWS::SecretsManager::Secret
+    Properties:
+      Name: !Ref DBSecretName
+      Description: "Credentials for RDS DB instance"
+      SecretString: !Sub |
+        {
+          "username": "${DBInstanceUser}",
+          "password": "${DBInstancePass}"
+        }
+
+Outputs:
+  DBSecretArn:
+    Description: "ARN of the Secret storing the DB credentials"
+    Value: !Ref DBSecret
