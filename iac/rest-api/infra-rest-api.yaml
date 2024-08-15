@@ -123,11 +123,11 @@ Resources:
 Outputs:
   DBInstanceEndpoint:
     Description: The connection endpoint for the RDS instance
-    Value: !GetAtt MyDBInstance.Endpoint.Address
+    Value: !GetAtt DBInstance.Endpoint.Address
     Export:
-      Name: MyDBInstanceEndpoint
+      Name: DBInstanceEndpoint
   DBInstancePort:
     Description: The port number for the RDS instance
-    Value: !GetAtt MyDBInstance.Endpoint.Port
+    Value: !GetAtt DBInstance.Endpoint.Port
     Export:
-      Name: MyDBInstancePort
+      Name: DBInstancePort
