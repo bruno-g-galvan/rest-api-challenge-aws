@@ -1,0 +1,32 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+Parameters:
+  ProjectName:
+    Type: "String"
+    # This gets replaced by the build script
+    Default: "rest-api-test"
+  DeploymentBucketName:
+    Type: "String"
+    # This gets replaced by the build script
+    Default: "rest-api-test-deployment-${AWS::AccountId}-us-east-1"
+    Description: Enter the existing AWS bucket were the artifacts for deployment are uploaded.
+
+Resources:
+  LandingDataBucket:
+    Type: "AWS::S3::Bucket"
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      BucketName: !Sub "${ProjectName}-data-landing-${AWS::AccountId}-${AWS::Region}"
+      AccessControl: Private
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: True
+        BlockPublicPolicy: True
+        IgnorePublicAcls: True
+        RestrictPublicBuckets: True
+      VersioningConfiguration:
+        Status: Enabled
+      Tags:
+        - Key: "datalake"
+          Value: !Ref ProjectName
+

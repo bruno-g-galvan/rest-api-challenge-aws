@@ -1,0 +1,9 @@
+# Details about this file:
+# https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/git-sync-concepts-terms.html?icmpid=docs_console_unmapped#git-sync-concepts-terms-depoyment-file
+
+# The path to the template file.
+template-file-path: "./iac/rest-api/infra-rest-api.yaml"
+
+# Values to set for the S3 website template.
+parameters: {}
+tags: {}
