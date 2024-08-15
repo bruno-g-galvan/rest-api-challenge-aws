@@ -97,8 +97,6 @@ Resources:
       - Key: "StackName"
         Value: !Ref "AWS::StackName"
 
-
-
 Outputs:
   GitSyncRoleName:
     Description: "The role name."
@@ -110,6 +108,7 @@ Outputs:
     Value: !GetAtt GitSyncRole.Arn
     Export:
       Name: !Sub "GitSyncRoleArn"
+      
 Metadata:
   AWS::CloudFormation::Interface:
     ParameterGroups:
@@ -119,7 +118,6 @@ Metadata:
       - SuggestedStackName
       - RoleBaseName
     ParameterLabels:
-      # General Configuration
       SuggestedStackName:
         default: "Suggested Stack Name:"
       RoleBaseName:
