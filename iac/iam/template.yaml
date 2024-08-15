@@ -9,8 +9,10 @@ Parameters:
     Type: "String"
     Description: "The base name for the role that we are creating."
     Default: "git-sync-role"
+
+
+
 Resources:
-  # TODO: Need to clean up these permissions, I was running into a bug with CodePipeline and I changed some of these permissions while troubleshooting.
   GitSyncRole:
     Type: "AWS::IAM::Role"
     Properties:
@@ -23,8 +25,11 @@ Resources:
             Service:
             - "cloudformation.amazonaws.com" 
             - "cloudformation.sync.codeconnections.amazonaws.com"
+            - "ec2.amazonaws.com"
+            - "rds.amazonaws.com"
           Action:
           - "sts:AssumeRole"
+
       Policies:
       - PolicyName: "SetupServiceRole"
         PolicyDocument:
@@ -38,6 +43,49 @@ Resources:
             Action:
             - "codestar-connections:*"
             Resource: "*"
+          - Effect: Allow
+            Action:
+              - rds:CreateDBInstance
+              - rds:DescribeDBInstances
+              - rds:DeleteDBInstance
+              - rds:ModifyDBInstance
+              - rds:RebootDBInstance
+              - rds:CreateDBSubnetGroup
+              - rds:DescribeDBSubnetGroups
+              - rds:ModifyDBSubnetGroup
+              - rds:DeleteDBSubnetGroup
+              - rds:CreateOptionGroup
+              - rds:DescribeOptionGroups
+              - rds:ModifyOptionGroup
+              - rds:DeleteOptionGroup
+              - rds:CreateDBParameterGroup
+              - rds:DescribeDBParameterGroups
+              - rds:ModifyDBParameterGroup
+              - rds:DeleteDBParameterGroup
+              - rds:DescribeDBEngineVersions
+              - rds:DescribeDBClusterSnapshots
+              - rds:DescribeDBSnapshots
+              - rds:ListTagsForResource
+              - rds:AddTagsToResource
+              - rds:RemoveTagsFromResource
+            Resource: "*"
+          - Effect: Allow
+            Action:
+              - ec2:DescribeVpcs
+              - ec2:DescribeSubnets
+              - ec2:DescribeSecurityGroups
+              - ec2:DescribeNetworkInterfaces
+            Resource: "*"
+          - Effect: Allow
+            Action:
+              - cloudformation:CreateStack
+              - cloudformation:DescribeStacks
+              - cloudformation:UpdateStack
+              - cloudformation:DeleteStack
+              - cloudformation:DescribeStackEvents
+              - cloudformation:DescribeStackResources
+            Resource: "*"
+
       ManagedPolicyArns:
       - "arn:aws:iam::aws:policy/AmazonS3FullAccess"
       - "arn:aws:iam::aws:policy/AWSCloudFormationFullAccess"
@@ -48,6 +96,9 @@ Resources:
         Value: "CloudFormation"
       - Key: "StackName"
         Value: !Ref "AWS::StackName"
+
+
+
 Outputs:
   GitSyncRoleName:
     Description: "The role name."
