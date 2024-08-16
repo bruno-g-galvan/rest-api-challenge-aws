@@ -154,6 +154,7 @@ Resources:
       ManagedPolicyArns:
       - "arn:aws:iam::aws:policy/CloudWatchLogsFullAccess" 
       - "arn:aws:iam::aws:policy/AmazonRDSFullAccess"
+      - "arn:aws:iam::aws:policy/AmazonS3FullAccess"
 
 Outputs:
   GitSyncRoleName:
