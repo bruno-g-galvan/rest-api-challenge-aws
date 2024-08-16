@@ -186,8 +186,8 @@ Resources:
       Handler: index.handler
       Role: arn:aws:iam::316328384763:role/LambdaExecutionRole
       Code:
-        S3Bucket: s3://rest-api-test-artifacts-316328384763-us-east-1/source/lambdas/
-        S3Key: lambda_function.py
+        S3Bucket: rest-api-test-artifacts-316328384763-us-east-1
+        S3Key: /source/lambdas/lambda_function.py
       Runtime: python3.8
       Timeout: 60
 
