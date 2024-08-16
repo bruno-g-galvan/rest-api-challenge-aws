@@ -187,7 +187,7 @@ Resources:
       Role: arn:aws:iam::316328384763:role/LambdaExecutionRole
       Code:
         S3Bucket: rest-api-test-artifacts-316328384763-us-east-1
-        S3Key: source/lambdas/lambda_function.zip
+        S3Key: source/lambdas/lambda_function.zip 
       Runtime: python3.8
       Timeout: 60
 
