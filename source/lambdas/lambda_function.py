@@ -7,40 +7,23 @@ db_username = os.environ['DB_USERNAME']
 db_password = os.environ['DB_PASSWORD']
 db_name = os.environ['DB_NAME']
 
-def lambda_handler(event, context):
-    try:
-        # Establish the connection
-        connection = pymysql.connect(
-            host=rds_host,
-            user=db_username,
-            password=db_password,
-            db=db_name,
-            connect_timeout=5
-        )
-        
-        # Create a table
-        with connection.cursor() as cursor:
-            create_table_sql = """
-            CREATE DATABASE hr_management;
-            CREATE TABLE IF NOT EXISTS jobs (
-                id INT NOT NULL AUTO_INCREMENT,
-                job VARCHAR(255) NOT NULL,
-                PRIMARY KEY (id)
-            );
-            """
-            cursor.execute(create_table_sql)
-            connection.commit()  # Commit the transaction if needed
+connection = pymysql.connect(rds_host, user = db_username, passwd = db_password, db = db_name)
 
-        return {
-            'statusCode': 200,
-            'body': 'Table created successfully.'
-        }
-    except pymysql.MySQLError as e:
-        return {
-            'statusCode': 500,
-            'body': f"Error: {str(e)}"
-        }
-    finally:
-        if connection:
-            connection.close()
+def lambda_handler(event, context):
+
+    # Create a table
+    cursor = connection.cursor()
+    sql = """
+    CREATE TABLE IF NOT EXISTS jobs (
+        id INT NOT NULL AUTO_INCREMENT,
+        job VARCHAR(255) NOT NULL,
+        PRIMARY KEY (id)
+    );
+    """
+    cursor.execute(sql)
+    
+    rows = cursor.fetchall()
+    for row in rows:
+        print("{0} {1}".format(row[0], row[1]))
+
 
