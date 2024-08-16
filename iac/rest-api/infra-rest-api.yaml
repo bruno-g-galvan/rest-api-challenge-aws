@@ -184,7 +184,7 @@ Resources:
     Properties:
       FunctionName: MyLambdaFunction
       Handler: index.handler
-      Role: !GetAtt LambdaExecutionRole.Arn
+      Role: arn:aws:iam::316328384763:role/LambdaExecutionRole
       Code:
         S3Bucket: my-lambda-bucket
         S3Key: lambda-code.zip
