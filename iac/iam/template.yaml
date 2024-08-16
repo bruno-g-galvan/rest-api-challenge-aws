@@ -145,21 +145,17 @@ Resources:
           PolicyDocument:
             Version: '2012-10-17'
             Statement:
-              - Effect: Allow
-                Action:
-                  - logs:CreateLogGroup
-                  - logs:CreateLogStream
-                  - logs:PutLogEvents
-                Resource: arn:aws:logs:*:*:*
-            Statement:
               - Effect: "Allow"
-                Action: [
-                  "ec2:DescribeInstances",
-                  "ec2:CreateNetworkInterface",
-                  "ec2:AttachNetworkInterface",
-                  "ec2:DescribeNetworkInterfaces",
-                  "ec2:DeleteNetworkInterface"
-                ]
+                Action:
+                - "logs:CreateLogGroup"
+                - "logs:CreateLogStream"
+                - "logs:PutLogEvents"
+                - "ec2:CreateNetworkInterface"
+                - "ec2:DescribeNetworkInterfaces"
+                - "ec2:DescribeSubnets"
+                - "ec2:DeleteNetworkInterface"
+                - "ec2:AssignPrivateIpAddresses"
+                - "ec2:UnassignPrivateIpAddresses"
                 Resource: "*"
       ManagedPolicyArns:
       - "arn:aws:iam::aws:policy/CloudWatchLogsFullAccess" 
