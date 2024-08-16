@@ -201,7 +201,6 @@ Resources:
           - sg-0f0938d2cdd1bf385
         SubnetIds:
           - subnet-0491940360c9b214f
-          - subnet-07fd123456788a036
           - subnet-05382ea73873952fb
           - subnet-099eb71f9901fd732
           - subnet-05d359dfa5fcb186d
