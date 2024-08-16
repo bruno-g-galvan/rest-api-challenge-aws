@@ -96,6 +96,23 @@ Resources:
         - Key: "datalake"
           Value: !Ref ProjectName
 
+  S3VPCEndpoint:
+    Type: "AWS::EC2::VPCEndpoint"
+    Properties:
+      VpcId: !Ref DefaultVPCId
+      ServiceName: !Sub "com.amazonaws.${AWS::Region}.s3"
+      RouteTableIds:
+        - !Ref DefaultRouteTableId
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: "Allow"
+            Principal: "*"
+            Action: "s3:*"
+            Resource: 
+              - !Sub "arn:aws:s3:::${LandingDataBucket}"
+              - !Sub "arn:aws:s3:::${LandingDataBucket}/*"
+
   DBInstance:
     Type: AWS::RDS::DBInstance
     Properties: 
@@ -244,5 +261,23 @@ Outputs:
     Description: ARN of the Lambda Function
     Value: !GetAtt RestApiLambdaFunction.Arn
 
+  DefaultVPCId:
+    Value: !Ref "AWS::DefaultVPC"
+    Description: "Default VPC ID"
 
+  DefaultRouteTableId:
+    Value: !Ref "AWS::DefaultRouteTable"
+    Description: "Default Route Table ID"
+
+  DefaultSubnetId1:
+    Value: !Ref "AWS::DefaultSubnet"
+    Description: "Default Subnet ID 1"
+
+  DefaultSubnetId2:
+    Value: !Ref "AWS::DefaultSubnet"
+    Description: "Default Subnet ID 2"
+
+  DefaultSecurityGroupId:
+    Value: !Ref "AWS::DefaultSecurityGroup"
+    Description: "Default Security Group ID"
 
