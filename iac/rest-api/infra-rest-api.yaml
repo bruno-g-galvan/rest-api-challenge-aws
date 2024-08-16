@@ -121,4 +121,80 @@ Resources:
       AutoMinorVersionUpgrade: true
       DeletionProtection: false
 
+#  MyApi:
+#    Type: AWS::ApiGateway::RestApi
+#    Properties:
+#      Name: MyApi
+#      Description: A simple API Gateway
+#
+#  MyResource:
+#    Type: AWS::ApiGateway::Resource
+#    Properties:
+#      ParentId: !GetAtt MyApi.RootResourceId
+#      PathPart: myresource
+#      RestApiId: !Ref MyApi
+#
+#  MyMethod:
+#    Type: AWS::ApiGateway::Method
+#    Properties:
+#      AuthorizationType: NONE
+#      HttpMethod: GET
+#      ResourceId: !Ref MyResource
+#      RestApiId: !Ref MyApi
+#      Integration:
+#        Type: MOCK
+#        IntegrationResponses:
+#          - StatusCode: 200
+#        PassthroughBehavior: WHEN_NO_MATCH
+#        RequestTemplates:
+#          application/json: '{"statusCode": 200}'
+#      MethodResponses:
+#        - StatusCode: 200
+#
+#  MyDeployment:
+#    Type: AWS::ApiGateway::Deployment
+#    DependsOn: MyMethod
+#    Properties:
+#      RestApiId: !Ref MyApi
+#      StageName: prod
+#
+#  MyUsagePlan:
+#    Type: AWS::ApiGateway::UsagePlan
+#    Properties:
+#      ApiStages:
+#        - ApiId: !Ref MyApi
+#          Stage: !Ref MyDeployment
+#      Description: A basic usage plan
+#      UsagePlanName: MyUsagePlan
+#
+#  MyApiKey:
+#    Type: AWS::ApiGateway::ApiKey
+#    Properties:
+#      Enabled: true
+#      GenerateDistinctId: true
+#      Name: MyApiKey
+#      StageKeys:
+#        - RestApiId: !Ref MyApi
+#          StageName: prod
+#
+#          AWSTemplateFormatVersion: '2010-09-09'
+
+  MyLambdaFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: MyLambdaFunction
+      Handler: index.handler
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Code:
+        S3Bucket: my-lambda-bucket
+        S3Key: lambda-code.zip
+      Runtime: python3.8
+      Timeout: 60
+
+Outputs:
+  LambdaFunctionArn:
+    Description: ARN of the Lambda Function
+    Value: !GetAtt MyLambdaFunction.Arn
+
+
 

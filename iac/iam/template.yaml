@@ -97,7 +97,7 @@ Resources:
   MonitoringRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: !Sub "${RoleBaseName}-MonitoringRole-${AWS::Region}"
+      RoleName: MonitoringRole
       AssumeRolePolicyDocument:
         Version: "2012-10-17"
         Statement:
@@ -117,8 +117,6 @@ Resources:
             - "logs:CreateLogStream"
             - "logs:CreateLogGroup"
             Resource: "*"
-
-
       - PolicyName: "RdsMonitoringPolicy"
         PolicyDocument:
           Version: "2012-10-17"
@@ -129,6 +127,32 @@ Resources:
               - "logs:CreateLogStream"
               - "logs:PutLogEvents"
             Resource: "*"
+
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: LambdaExecutionRole
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: LambdaExecutionPolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource: arn:aws:logs:*:*:*
+      ManagedPolicyArns:
+      - "arn:aws:iam::aws:policy/CloudWatchLogsFullAccess" 
+      - "arn:aws:iam::aws:policy/AmazonRDSFullAccess"
 
 Outputs:
   GitSyncRoleName:
@@ -151,6 +175,16 @@ Outputs:
     Value: !GetAtt MonitoringRole.Arn
     Export:
       Name: !Sub "MonitoringRoleArn"
+  LambdaExecutionRoleName:
+    Description: "The role name."
+    Value: !Ref LambdaExecutionRole
+    Export:
+      Name: !Sub "${AWS::StackName}-LambdaExecutionRoleName"
+  LambdaExecutionRoleArn:
+    Description: "The role ARN."
+    Value: !GetAtt LambdaExecutionRole.Arn
+    Export:
+      Name: !Sub "LambdaExecutionRoleArn"
 
 Metadata:
   AWS::CloudFormation::Interface:
