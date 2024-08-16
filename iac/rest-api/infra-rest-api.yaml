@@ -191,10 +191,10 @@ Resources:
       Runtime: python3.8
       Environment:
         Variables:
-          RDS_HOST: "your-rds-endpoint.rds.amazonaws.com"
-          DB_USERNAME: "your_db_username"
-          DB_PASSWORD: "your_db_password"
-          DB_NAME: "your_db_name"
+          RDS_HOST: "rest-api-db-instance.cx486wyu2r7m.us-east-1.rds.amazonaws.com"
+          DB_USERNAME: "admin"
+          DB_PASSWORD: "adminadmin"
+          DB_NAME: "hr_management"
       Timeout: 60
 
 Outputs:
