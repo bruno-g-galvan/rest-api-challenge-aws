@@ -209,6 +209,36 @@ Resources:
           - subnet-06c2b2491b1f6017a
           - subnet-0b40f85ee892dff81 
 
+  IngestionLambdaFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: IngestionLambdaFunction
+      Handler: lambda_function.lambda_handler
+      Role: arn:aws:iam::316328384763:role/LambdaExecutionRole
+      Code:
+        S3Bucket: rest-api-test-artifacts-316328384763-us-east-1
+        S3Key: source/lambdas/ingestion/lambda_function.zip 
+      Runtime: python3.8
+      Environment:
+        Variables:
+          RDS_HOST: "rest-api-db-instance.cx486wyu2r7m.us-east-1.rds.amazonaws.com"
+          DB_USERNAME: "admin"
+          DB_PASSWORD: "adminadmin"
+          DB_NAME: "hr_management"
+      Timeout: 60
+      VpcConfig:
+        SecurityGroupIds:
+          - sg-0f0938d2cdd1bf385
+          - sg-033d9561310ac6fd7
+          - sg-016569f907c4f7c22
+        SubnetIds:
+          - subnet-0491940360c9b214f
+          - subnet-05382ea73873952fb
+          - subnet-099eb71f9901fd732
+          - subnet-05d359dfa5fcb186d
+          - subnet-06c2b2491b1f6017a
+          - subnet-0b40f85ee892dff81 
+
 Outputs:
   LambdaFunctionArn:
     Description: ARN of the Lambda Function
