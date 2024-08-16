@@ -179,17 +179,17 @@ Resources:
 #
 #          AWSTemplateFormatVersion: '2010-09-09'
 
-  MyLambdaFunction:
-    Type: AWS::Lambda::Function
-    Properties:
-      FunctionName: MyLambdaFunction
-      Handler: lambda_function.lambda_handler
-      Role: arn:aws:iam::316328384763:role/LambdaExecutionRole
-      Code:
-        S3Bucket: rest-api-test-artifacts-316328384763-us-east-1
-        S3Key: source/lambdas/lambda_function.zip 
-      Runtime: python3.8
-      Timeout: 60
+#  MyLambdaFunction:
+#    Type: AWS::Lambda::Function
+#    Properties:
+#      FunctionName: MyLambdaFunction
+#      Handler: lambda_function.lambda_handler
+#      Role: arn:aws:iam::316328384763:role/LambdaExecutionRole
+#      Code:
+#        S3Bucket: rest-api-test-artifacts-316328384763-us-east-1
+#        S3Key: source/lambdas/lambda_function.zip 
+#      Runtime: python3.8
+#      Timeout: 60
 
 Outputs:
   LambdaFunctionArn:
