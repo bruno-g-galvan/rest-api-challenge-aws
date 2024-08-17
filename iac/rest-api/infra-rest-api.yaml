@@ -70,6 +70,28 @@ Resources:
         - Key: "datalake"
           Value: !Ref ProjectName
 
+  GlueTempBucket:
+    Type: "AWS::S3::Bucket"
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      BucketName: !Sub "${ProjectName}-glue-temp-${AWS::AccountId}-${AWS::Region}"
+      AccessControl: Private
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: True
+        BlockPublicPolicy: True
+        IgnorePublicAcls: True
+        RestrictPublicBuckets: True
+      LifecycleConfiguration:
+        Rules:
+          - Id: DeleteOldObjects
+            Prefix: glue/
+            Status: Enabled
+            ExpirationInDays: 1
+      Tags:
+        - Key: "datalake"
+          Value: !Ref ProjectName
+
   ArtifactsBucket:
     Type: "AWS::S3::Bucket"
     DeletionPolicy: Retain
@@ -207,25 +229,32 @@ Resources:
           - subnet-099eb71f9901fd732
           - subnet-05d359dfa5fcb186d
           - subnet-06c2b2491b1f6017a
-          - subnet-0b40f85ee892dff81 
+          - subnet-0b40f85ee892dff81
 
-  IngestionLambdaFunction:
-    Type: AWS::Lambda::Function
+  GlueJobTablesLanding2DBInstance:
+    Type: AWS::Glue::Job
     Properties:
-      FunctionName: IngestionLambdaFunction
-      Handler: lambda_function.lambda_handler
-      Role: arn:aws:iam::316328384763:role/LambdaExecutionRole
-      Code:
-        S3Bucket: rest-api-test-artifacts-316328384763-us-east-1
-        S3Key: source/lambdas/ingestion/lambda_function.zip 
-      Runtime: python3.8
-      Environment:
-        Variables:
-          RDS_HOST: "rest-api-db-instance.cx486wyu2r7m.us-east-1.rds.amazonaws.com"
-          DB_USERNAME: "admin"
-          DB_PASSWORD: "adminadmin"
-          DB_NAME: "hr_management"
-      Timeout: 60
+      Name: !Sub "${ProjectName}-tables-landing-to-db-job"
+      Role: Glue-Admin-Role
+      Command:
+        Name: glueetl
+        ScriptLocation: !Sub "s3://${ArtifactsBucket}/source/glue-scripts/tables-landing-2-db-job.py"
+        PythonVersion: 3
+      DefaultArguments:
+        --TempDir: !Sub "s3://${GlueTempBucket}/glue/${ProjectName}/tables-landing-2-db-job/"
+        --spark-event-logs-path: !Sub "s3://${GlueTempBucket}/glue/${ProjectName}/tables-landing-2-db-job/sparkHistoryLogs/"
+        --job-language: python
+        --job-bookmark-option: job-bookmark-disable
+        --enable-metrics: true
+        --enable-continuous-cloudwatch-log: true
+        --enable-spark-ui: true
+        --enable-glue-datacatalog: ""
+      ExecutionClass: FLEX
+      WorkerType: G.1X
+      NumberOfWorkers: 2
+      GlueVersion: 4.0
+      MaxRetries: 0
+      Timeout: 30
 
 Outputs:
   LambdaFunctionArn:

@@ -7,7 +7,7 @@ db_username = os.environ['DB_USERNAME']
 db_password = os.environ['DB_PASSWORD']
 db_name = os.environ['DB_NAME']
 
-connection = pymysql.connect(rds_host, user = db_username, passwd = db_password, db = db_name)
+connection = pymysql.connect(host=rds_host, user = db_username, passwd = db_password, db = db_name)
 
 def lambda_handler(event, context):
 
