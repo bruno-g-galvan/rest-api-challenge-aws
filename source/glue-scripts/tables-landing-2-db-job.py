@@ -4,6 +4,8 @@ from awsglue.utils import getResolvedOptions
 from pyspark.context import SparkContext
 from awsglue.context import GlueContext
 from awsglue.job import Job
+from pyspark.sql.functions import regexp_replace, col
+from pyspark.sql.types import IntegerType, StringType, DoubleType
 
 args = getResolvedOptions(sys.argv, ['JOB_NAME'])
 sc = SparkContext()
@@ -12,24 +14,62 @@ spark = glueContext.spark_session
 job = Job(glueContext)
 job.init(args['JOB_NAME'], args)
 
-# Define the S3 bucket and prefix (folder)
-s3_path = "s3://rest-api-test-data-landing-316328384763-us-east-1/tables/departments.csv"
+# Paths to the CSV files
+s3_bucket = "s3://rest-api-test-data-landing-316328384763-us-east-1/tables/"
+jobs_path = s3_bucket + "jobs.csv"
+departments_path = s3_bucket + "departments.csv"
+hired_employees_path = s3_bucket + "hired_employees.csv"
 
 # Read all CSV files from the S3 bucket
-df = spark.read.format("csv").option("header", "true").load(s3_path)
+departments_df = spark.read.format("csv").option("header", "false").option("delimiter", ',').load(departments_path)
+jobs_df = spark.read.format("csv").option("header", "false").option("delimiter", ',').load(jobs_path)
+hired_employees_df = spark.read.format("csv").option("header", "false").option("delimiter", ',').load(hired_employees_path)
 
-# Show the dataframe (Optional: for debugging)
-df.show()
+departments_df = departments_df.toDF("id", "department")
+jobs_df = jobs_df.toDF("id", "job")
 
-# Write the DataFrame to MySQL table in RDS
-df.write \
+hired_employees_df = hired_employees_df.toDF("id", "employee", "entry_date", "department_id", "job_id")
+departments_df = departments_df.withColumn("id", col("id").cast(IntegerType())) \
+                               .withColumn("department", col("department").cast(StringType()))
+                               
+jobs_df = jobs_df.withColumn("id", col("id").cast(IntegerType())) \
+                 .withColumn("job", col("job").cast(StringType()))
+                
+hired_employees_df = hired_employees_df.withColumn("id", col("id").cast(IntegerType())) \
+                                       .withColumn("employee", col("employee").cast(StringType())) \
+                                       .withColumn("entry_date", col("entry_date").cast(StringType())) \
+                                       .withColumn("department_id", col("department_id").cast(IntegerType())) \
+                                       .withColumn("job_id", col("job_id").cast(IntegerType()))
+
+departments_df.write \
     .format("jdbc") \
     .option("url", "jdbc:mysql://rest-api-db-instance.cx486wyu2r7m.us-east-1.rds.amazonaws.com:3306/hr_management") \
     .option("driver", "com.mysql.cj.jdbc.Driver") \
     .option("dbtable", "departments") \
     .option("user", "admin") \
     .option("password", "adminadmin") \
-    .mode("append") \
+    .mode("overwrite") \
+    .save()
+
+jobs_df.write \
+    .format("jdbc") \
+    .option("url", "jdbc:mysql://rest-api-db-instance.cx486wyu2r7m.us-east-1.rds.amazonaws.com:3306/hr_management") \
+    .option("driver", "com.mysql.cj.jdbc.Driver") \
+    .option("dbtable", "jobs") \
+    .option("user", "admin") \
+    .option("password", "adminadmin") \
+    .mode("overwrite") \
+    .save()
+   
+hired_employees_df.write \
+    .format("jdbc") \
+    .option("url", "jdbc:mysql://rest-api-db-instance.cx486wyu2r7m.us-east-1.rds.amazonaws.com:3306/hr_management") \
+    .option("driver", "com.mysql.cj.jdbc.Driver") \
+    .option("dbtable", "hired_employees") \
+    .option("user", "admin") \
+    .option("password", "adminadmin") \
+    .mode("overwrite") \
     .save()
 
 job.commit()
+

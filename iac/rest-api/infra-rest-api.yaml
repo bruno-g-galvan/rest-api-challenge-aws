@@ -143,18 +143,22 @@ Resources:
       AutoMinorVersionUpgrade: true
       DeletionProtection: false
 
-#  MyApi:
-#    Type: AWS::ApiGateway::RestApi
-#    Properties:
-#      Name: MyApi
-#      Description: A simple API Gateway
-#
-#  MyResource:
-#    Type: AWS::ApiGateway::Resource
-#    Properties:
-#      ParentId: !GetAtt MyApi.RootResourceId
-#      PathPart: myresource
-#      RestApiId: !Ref MyApi
+  RestApiChallenge:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: RestApiChallenge
+      Description: Rest API Challenge
+      EndpointConfiguration:
+        Types:
+          - REGIONAL
+
+  RestApiChallengeStatusResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !GetAtt RestApiChallenge.RootResourceId
+      PathPart: 'status'
+      RestApiId: !Ref RestApiChallenge
+      
 #
 #  MyMethod:
 #    Type: AWS::ApiGateway::Method
