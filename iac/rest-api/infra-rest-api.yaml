@@ -179,7 +179,7 @@ Resources:
       - GetStatusMethod
     Properties:
       RestApiId: !Ref RestApiChallenge
-      StageName: prod
+      StageName: prod 
 
   DeploymentStage:
     Type: AWS::ApiGateway::Stage
