@@ -173,50 +173,21 @@ Resources:
       MethodResponses:
         - StatusCode: 200
 
-#  MyMethod:
-#    Type: AWS::ApiGateway::Method
-#    Properties:
-#      AuthorizationType: NONE
-#      HttpMethod: GET
-#      ResourceId: !Ref MyResource
-#      RestApiId: !Ref MyApi
-#      Integration:
-#        Type: MOCK
-#        IntegrationResponses:
-#          - StatusCode: 200
-#        PassthroughBehavior: WHEN_NO_MATCH
-#        RequestTemplates:
-#          application/json: '{"statusCode": 200}'
-#      MethodResponses:
-#        - StatusCode: 200
-#
-#  MyDeployment:
-#    Type: AWS::ApiGateway::Deployment
-#    DependsOn: MyMethod
-#    Properties:
-#      RestApiId: !Ref MyApi
-#      StageName: prod
-#
-#  MyUsagePlan:
-#    Type: AWS::ApiGateway::UsagePlan
-#    Properties:
-#      ApiStages:
-#        - ApiId: !Ref MyApi
-#          Stage: !Ref MyDeployment
-#      Description: A basic usage plan
-#      UsagePlanName: MyUsagePlan
-#
-#  MyApiKey:
-#    Type: AWS::ApiGateway::ApiKey
-#    Properties:
-#      Enabled: true
-#      GenerateDistinctId: true
-#      Name: MyApiKey
-#      StageKeys:
-#        - RestApiId: !Ref MyApi
-#          StageName: prod
-#
-#          AWSTemplateFormatVersion: '2010-09-09'
+  RestApiChallengeDeployment:
+    Type: AWS::ApiGateway::Deployment
+    DependsOn: 
+      - GetStatusMethod
+    Properties:
+      RestApiId: !Ref RestApiChallenge
+      StageName: prod
+
+  DeploymentStage:
+    Type: AWS::ApiGateway::Stage
+    Properties:
+      DeploymentId: !Ref RestApiChallengeDeployment
+      StageName: prod
+      RestApiId: !Ref RestApiChallenge
+      Description: "Production stage"
 
   RestApiLambdaFunction:
     Type: AWS::Lambda::Function
