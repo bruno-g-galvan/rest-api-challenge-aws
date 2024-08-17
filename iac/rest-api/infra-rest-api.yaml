@@ -181,7 +181,7 @@ Resources:
       RestApiId: !Ref RestApiChallenge
       StageName: prod 
 
-  DeploymentStage:
+  RestApiChallengeDeploymentStage:
     Type: AWS::ApiGateway::Stage
     Properties:
       DeploymentId: !Ref RestApiChallengeDeployment
