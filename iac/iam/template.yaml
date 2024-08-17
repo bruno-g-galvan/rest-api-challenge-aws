@@ -89,7 +89,7 @@ Resources:
       - "arn:aws:iam::aws:policy/AWSCodePipeline_FullAccess"
       - "arn:aws:iam::aws:policy/IAMFullAccess"
       - "arn:aws:iam::aws:policy/AWSLambda_FullAccess"
-      - "arn:aws:iam::aws:policy/AWSGlueConsoleFullAccess"
+      - "arn:aws:iam::aws:policy/AWSGlueConsoleFullAccess" 
       Tags:
       - Key: "ManagedBy"
         Value: "CloudFormation"
