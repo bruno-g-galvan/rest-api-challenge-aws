@@ -173,22 +173,6 @@ Resources:
       MethodResponses:
         - StatusCode: 200
 
-  RestApiChallengeDeployment:
-    Type: AWS::ApiGateway::Deployment
-    DependsOn: 
-      - GetStatusMethod
-    Properties:
-      RestApiId: !Ref RestApiChallenge
-      StageName: prod 
-
-  RestApiChallengeDeploymentStage:
-    Type: AWS::ApiGateway::Stage
-    Properties:
-      DeploymentId: !Ref RestApiChallengeDeployment
-      StageName: prod
-      RestApiId: !Ref RestApiChallenge
-      Description: "Production stage"
-
   RestApiLambdaFunction:
     Type: AWS::Lambda::Function
     Properties:
