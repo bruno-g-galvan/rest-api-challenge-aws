@@ -1,12 +1,11 @@
 import pymysql
 import os
 import json
+import boto3
 from botocore.exceptions import ClientError
 
 # Database settings
 rds_host = os.environ['RDS_HOST']
-db_username = os.environ['DB_USERNAME']
-db_password = os.environ['DB_PASSWORD']
 db_name = os.environ['DB_NAME']
 
 #connection = pymysql.connect(host = rds_host, user = db_username, passwd = db_password, db=db_name)
@@ -16,6 +15,19 @@ jobs_path = '/jobs'
 departments_path = '/departments'
 hired_employees_2021_quarters_path = '/hired_employees_2021_quarters'
 hired_employees_2021_path = '/hired_employees_2021'
+
+# Create a Secrets Manager client
+client = boto3.client('secretsmanager', region_name='us-west-1')
+
+values = client.get_secret_value(SecretId=os.environ['SECRET_NAME'])
+
+# Parse the secret
+secret = values['SecretString']
+secret_dict = json.loads(secret)
+
+db_username = secret_dict.get('username')
+db_password = secret_dict.get('password')
+
 
 def lambda_handler(event, context):
     print('Request event: ', event)
@@ -172,6 +184,31 @@ def save_departments(request_body):
                 # SQL query to insert JSON data into the table
                 sql = "INSERT INTO departments (id, department) VALUES (%s, %s)"
                 cursor.execute(sql, (id_value,department_value))
+            
+            # Commit the transaction
+            connection.commit()
+        
+        finally:
+            connection.close()
+            
+    except ClientError as e:
+        print('Error:', e)
+        return {
+            'statusCode': 500,
+            'body': json.dumps({'error': str(e)})
+        }
+
+def delete_jobs(request_body):
+    try:
+        connection = pymysql.connect(host = rds_host, user = db_username, passwd = db_password, db=db_name)
+        # Extract the value associated with the "job" key
+        id_value = request_body["id"]
+        
+        try:
+            with connection.cursor() as cursor:
+                # SQL query to insert JSON data into the table
+                sql = "DELETE FROM jobs WHERE id = %s"
+                cursor.execute(sql, (id_value,))
             
             # Commit the transaction
             connection.commit()

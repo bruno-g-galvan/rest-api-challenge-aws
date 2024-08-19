@@ -160,6 +160,14 @@ Resources:
                 - "ec2:AssignPrivateIpAddresses"
                 - "ec2:UnassignPrivateIpAddresses"
                 Resource: "*"
+        - PolicyName: GetSecretValue
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+            - Effect: 'Allow'
+              Action:
+                - 'secretsmanager:GetSecretValue'
+              Resource: 'arn:aws:secretsmanager:us-east-1:316328384763:secret:rds-db-credentials/rest-api-db-instance/admin/1723783692491-S26CpC'
       ManagedPolicyArns:
       - "arn:aws:iam::aws:policy/CloudWatchLogsFullAccess" 
       - "arn:aws:iam::aws:policy/AmazonRDSFullAccess"

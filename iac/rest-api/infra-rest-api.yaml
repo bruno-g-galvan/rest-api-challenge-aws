@@ -167,13 +167,12 @@ Resources:
       Role: arn:aws:iam::316328384763:role/LambdaExecutionRole
       Code:
         S3Bucket: rest-api-test-artifacts-316328384763-us-east-1
-        S3Key: source/lambdas/lambda_function.zip 
+        S3Key: source/lambdas/rest-api-function/lambda_function.zip
       Runtime: python3.8
       Environment:
         Variables:
           RDS_HOST: "rest-api-db-instance.cx486wyu2r7m.us-east-1.rds.amazonaws.com"
-          DB_USERNAME: "admin"
-          DB_PASSWORD: "adminadmin"
+          SECRET_NAME: "rds-db-credentials/rest-api-db-instance/admin/1723783692491"
           DB_NAME: "hr_management"
       Timeout: 60
       VpcConfig:
