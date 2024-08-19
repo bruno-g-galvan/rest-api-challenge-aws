@@ -4,8 +4,8 @@ from awsglue.utils import getResolvedOptions
 from pyspark.context import SparkContext
 from awsglue.context import GlueContext
 from awsglue.job import Job
-from pyspark.sql.functions import regexp_replace, col
-from pyspark.sql.types import IntegerType, StringType, DoubleType
+from pyspark.sql.functions import col
+from pyspark.sql.types import IntegerType, StringType
 
 args = getResolvedOptions(sys.argv, ['JOB_NAME'])
 sc = SparkContext()
@@ -27,8 +27,8 @@ hired_employees_df = spark.read.format("csv").option("header", "false").option("
 
 departments_df = departments_df.toDF("id", "department")
 jobs_df = jobs_df.toDF("id", "job")
-
 hired_employees_df = hired_employees_df.toDF("id", "employee", "entry_date", "department_id", "job_id")
+
 departments_df = departments_df.withColumn("id", col("id").cast(IntegerType())) \
                                .withColumn("department", col("department").cast(StringType()))
                                
@@ -41,35 +41,45 @@ hired_employees_df = hired_employees_df.withColumn("id", col("id").cast(IntegerT
                                        .withColumn("department_id", col("department_id").cast(IntegerType())) \
                                        .withColumn("job_id", col("job_id").cast(IntegerType()))
 
-departments_df.write \
-    .format("jdbc") \
-    .option("url", "jdbc:mysql://rest-api-db-instance.cx486wyu2r7m.us-east-1.rds.amazonaws.com:3306/hr_management") \
-    .option("driver", "com.mysql.cj.jdbc.Driver") \
-    .option("dbtable", "departments") \
-    .option("user", "admin") \
-    .option("password", "adminadmin") \
-    .mode("overwrite") \
-    .save()
+try:
+    departments_df.write \
+        .format("jdbc") \
+        .option("url", "jdbc:mysql://rest-api-db-instance.cx486wyu2r7m.us-east-1.rds.amazonaws.com:3306/hr_management") \
+        .option("driver", "com.mysql.cj.jdbc.Driver") \
+        .option("dbtable", "departments") \
+        .option("user", "admin") \
+        .option("password", "adminadmin") \
+        .mode("overwrite") \
+        .save()
+except Exception as e:
+    print(f"Error writing departments table: {e}")
 
-jobs_df.write \
-    .format("jdbc") \
-    .option("url", "jdbc:mysql://rest-api-db-instance.cx486wyu2r7m.us-east-1.rds.amazonaws.com:3306/hr_management") \
-    .option("driver", "com.mysql.cj.jdbc.Driver") \
-    .option("dbtable", "jobs") \
-    .option("user", "admin") \
-    .option("password", "adminadmin") \
-    .mode("overwrite") \
-    .save()
-   
-hired_employees_df.write \
-    .format("jdbc") \
-    .option("url", "jdbc:mysql://rest-api-db-instance.cx486wyu2r7m.us-east-1.rds.amazonaws.com:3306/hr_management") \
-    .option("driver", "com.mysql.cj.jdbc.Driver") \
-    .option("dbtable", "hired_employees") \
-    .option("user", "admin") \
-    .option("password", "adminadmin") \
-    .mode("overwrite") \
-    .save()
+try:
+    jobs_df.write \
+        .format("jdbc") \
+        .option("url", "jdbc:mysql://rest-api-db-instance.cx486wyu2r7m.us-east-1.rds.amazonaws.com:3306/hr_management") \
+        .option("driver", "com.mysql.cj.jdbc.Driver") \
+        .option("dbtable", "jobs") \
+        .option("user", "admin") \
+        .option("password", "adminadmin") \
+        .mode("overwrite") \
+        .save()
+except Exception as e:
+    print(f"Error writing jobs table: {e}")
+
+try:
+    hired_employees_df.write \
+        .format("jdbc") \
+        .option("url", "jdbc:mysql://rest-api-db-instance.cx486wyu2r7m.us-east-1.rds.amazonaws.com:3306/hr_management") \
+        .option("driver", "com.mysql.cj.jdbc.Driver") \
+        .option("dbtable", "hired_employees") \
+        .option("user", "admin") \
+        .option("password", "adminadmin") \
+        .mode("overwrite") \
+        .save()
+except Exception as e:
+    print(f"Error writing hired_employees table: {e}")
 
 job.commit()
 
+spark.stop()
