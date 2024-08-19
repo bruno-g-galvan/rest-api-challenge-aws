@@ -1,14 +1,19 @@
 import json
 import requests
+import logging
+
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
 
 def lambda_handler(event, context):
-    url = 'https://kuwvvh3ktd.execute-api.us-east-1.amazonaws.com/prod/status'  # Replace with your API endpoint
+    url = 'https://example.com/api'  # Replace with your API endpoint
     
     try:
-        response = requests.get(url)  # You can use requests.post() for POST requests
+        logger.info('Making API request to %s', url)
+        response = requests.get(url)
+        logger.info('API response status: %d', response.status_code)
 
         if response.status_code == 200:
-            # Process the response as needed
             data = response.json()
             return {
                 'statusCode': 200,
@@ -26,7 +31,7 @@ def lambda_handler(event, context):
                 })
             }
     except requests.RequestException as e:
-        # Handle any exceptions that occur during the request
+        logger.error('Request exception: %s', str(e))
         return {
             'statusCode': 500,
             'body': json.dumps({
