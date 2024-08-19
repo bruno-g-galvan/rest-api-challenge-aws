@@ -70,24 +70,6 @@ Resources:
         - Key: "datalake"
           Value: !Ref ProjectName
 
-  ArchiveDataBucket:
-    Type: "AWS::S3::Bucket"
-    DeletionPolicy: Retain
-    UpdateReplacePolicy: Retain
-    Properties:
-      BucketName: !Sub "${ProjectName}-data-archive-${AWS::AccountId}-${AWS::Region}"
-      AccessControl: Private
-      PublicAccessBlockConfiguration:
-        BlockPublicAcls: True
-        BlockPublicPolicy: True
-        IgnorePublicAcls: True
-        RestrictPublicBuckets: True
-      VersioningConfiguration:
-        Status: Enabled
-      Tags:
-        - Key: "datalake"
-          Value: !Ref ProjectName
-
   GlueTempBucket:
     Type: "AWS::S3::Bucket"
     DeletionPolicy: Retain
