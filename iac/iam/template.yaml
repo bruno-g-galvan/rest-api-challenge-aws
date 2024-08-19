@@ -91,6 +91,7 @@ Resources:
       - "arn:aws:iam::aws:policy/AWSLambda_FullAccess"
       - "arn:aws:iam::aws:policy/AWSGlueConsoleFullAccess" 
       - "arn:aws:iam::aws:policy/AmazonAPIGatewayAdministrator"
+      - "arn:aws:iam::aws:policy/AmazonSESFullAccess"
       Tags:
       - Key: "ManagedBy"
         Value: "CloudFormation"
@@ -163,6 +164,7 @@ Resources:
       - "arn:aws:iam::aws:policy/CloudWatchLogsFullAccess" 
       - "arn:aws:iam::aws:policy/AmazonRDSFullAccess"
       - "arn:aws:iam::aws:policy/AmazonS3FullAccess"
+      - "arn:aws:iam::aws:policy/AmazonSESFullAccess"
 
 Outputs:
   GitSyncRoleName:
