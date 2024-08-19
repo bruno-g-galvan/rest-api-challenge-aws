@@ -173,6 +173,7 @@ Resources:
       - "arn:aws:iam::aws:policy/AmazonRDSFullAccess"
       - "arn:aws:iam::aws:policy/AmazonS3FullAccess"
       - "arn:aws:iam::aws:policy/AmazonSESFullAccess"
+      - "arn:aws:iam::aws:policy/SecretsManagerReadWrite"
 
 Outputs:
   GitSyncRoleName:

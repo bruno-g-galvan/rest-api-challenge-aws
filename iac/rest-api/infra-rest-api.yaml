@@ -47,7 +47,7 @@ Parameters:
     Type: "String"
     Default: "rest-api-test"
   DeploymentBucketName:
-    Type: "String"
+    Type: "String" 
     Default: "rest-api-deployment-${AWS::AccountId}-us-east-1"
     Description: Enter the existing AWS bucket were the artifacts for deployment are uploaded.
 
