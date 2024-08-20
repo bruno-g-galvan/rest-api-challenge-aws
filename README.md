@@ -1,5 +1,3 @@
-
-
 ## Description of the AWS Glue Job for Bulk Data Insertion
 
 This AWS Glue job is designed to perform bulk data insertion into a MySQL database from CSV files stored in an S3 bucket. It utilizes Spark's distributed processing capabilities to efficiently handle large datasets, ensuring that data is read, transformed, and written to the target database with minimal overhead.
