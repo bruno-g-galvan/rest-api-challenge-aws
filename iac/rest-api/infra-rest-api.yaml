@@ -221,6 +221,7 @@ Resources:
         --enable-continuous-cloudwatch-log: true
         --enable-spark-ui: true
         --enable-glue-datacatalog: ""
+        --jdbc-url: "jdbc:mysql://rest-api-db-instance.cx486wyu2r7m.us-east-1.rds.amazonaws.com:3306/hr_management"
       ExecutionClass: FLEX
       WorkerType: G.1X
       NumberOfWorkers: 2
