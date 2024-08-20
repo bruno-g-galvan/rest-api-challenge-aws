@@ -2,32 +2,30 @@ import pymysql
 import os
 import json
 import boto3
+import logging
 from botocore.exceptions import ClientError
 
 # Database settings
 rds_host = os.environ['RDS_HOST']
 db_name = os.environ['DB_NAME']
 
-#connection = pymysql.connect(host = rds_host, user = db_username, passwd = db_password, db=db_name)
-
 status_check_path = '/status'
 jobs_path = '/jobs'
 departments_path = '/departments'
+hired_employees_path = '/hired_employees'
+
 hired_employees_2021_quarters_path = '/hired_employees_2021_quarters'
 hired_employees_2021_path = '/hired_employees_2021'
 
-# Create a Secrets Manager client
-client = boto3.client('secretsmanager', region_name='us-west-1')
+drop_jobs_table_path = '/drop_jobs_table'
+create_jobs_table_path = '/create_jobs_table'
+drop_departments_table_path = '/drop_departments_table'
+create_departments_table_path = '/create_departments_table'
+drop_hired_employees_table_path = '/drop_hired_employees_table'
+create_hired_employees_table_path = '/create_hired_employees_table'
 
-values = client.get_secret_value(SecretId=os.environ['SECRET_NAME'])
-
-# Parse the secret
-secret = values['SecretString']
-secret_dict = json.loads(secret)
-
-db_username = secret_dict.get('username')
-db_password = secret_dict.get('password')
-
+db_username = 'admin'
+db_password = 'adminadmin'
 
 def lambda_handler(event, context):
     print('Request event: ', event)
@@ -47,16 +45,28 @@ def lambda_handler(event, context):
                 response = hired_employees_2021()
             elif path == hired_employees_2021_quarters_path:
                 response = hired_employees_2021_quarters()
+            elif path == drop_jobs_table_path:
+                response = drop_jobs_table()
+            elif path == create_jobs_table_path:
+                response = create_jobs_table()
+            elif path == drop_departments_table_path:
+                response = drop_departments_table()
+            elif path == create_departments_table_path:
+                response = create_departments_table()
         elif http_method == 'POST':
             if path == jobs_path:
                 response = save_jobs(json.loads(event['body']))
             elif path == departments_path:
                 response = save_departments(json.loads(event['body']))
+            elif path == hired_employees_path:
+                response = save_hired_employees(json.loads(event['body']))
         elif http_method == 'DELETE':
             if path == jobs_path:
                 response = delete_jobs(json.loads(event['body']))
             elif path == departments_path:
                 response = delete_departments(json.loads(event['body']))
+            elif path == hired_employees_path:
+                response = delete_hired_employees(json.loads(event['body']))
             
         else:
             response = {'error': 'Incorrect path.'}
@@ -151,19 +161,31 @@ def save_jobs(request_body):
     try:
         connection = pymysql.connect(host = rds_host, user = db_username, passwd = db_password, db=db_name)
         # Extract the value associated with the "job" key
-        job_value = request_body["job"]
+        
+        jobs_to_insert = [(job['job'],) for job in request_body]
         
         try:
             with connection.cursor() as cursor:
-                # SQL query to insert JSON data into the table
+                
                 sql = "INSERT INTO jobs (job) VALUES (%s)"
-                cursor.execute(sql, (job_value,))
-            
+                
+                cursor.executemany(sql, jobs_to_insert)
+        
             # Commit the transaction
             connection.commit()
         
         finally:
             connection.close()
+        
+        response = ['Job/s added successfully.']
+        
+        return {
+            'statusCode': 200,
+            'headers': {
+                'Content-Type': 'application/json'
+            },
+            'body': json.dumps(response)
+        }
             
     except ClientError as e:
         print('Error:', e)
@@ -176,20 +198,71 @@ def save_departments(request_body):
     try:
         connection = pymysql.connect(host = rds_host, user = db_username, passwd = db_password, db=db_name)
         # Extract the value associated with the "job" key
-        id_value = request_body["id"]
-        department_value = request_body["department"]
+        
+        department_to_insert = [(department['department'],) for department in request_body]
         
         try:
             with connection.cursor() as cursor:
-                # SQL query to insert JSON data into the table
-                sql = "INSERT INTO departments (id, department) VALUES (%s, %s)"
-                cursor.execute(sql, (id_value,department_value))
-            
+                
+                sql = "INSERT INTO departments (department) VALUES (%s)"
+                
+                cursor.executemany(sql, department_to_insert)
+        
             # Commit the transaction
             connection.commit()
         
         finally:
             connection.close()
+        
+        response = ['Department/s added successfully.']
+        
+        return {
+            'statusCode': 200,
+            'headers': {
+                'Content-Type': 'application/json'
+            },
+            'body': json.dumps(response)
+        }
+            
+    except ClientError as e:
+        print('Error:', e)
+        return {
+            'statusCode': 500,
+            'body': json.dumps({'error': str(e)})
+        }
+        
+def save_hired_employees(request_body):
+    try:
+        connection = pymysql.connect(host = rds_host, user = db_username, passwd = db_password, db=db_name)
+        # Extract the value associated with the "job" key
+        
+        hired_employee_to_insert = [
+            (item['employee'], item['entry_date'], item['department_id'], item['job_id'])
+            for item in request_body
+        ]
+        
+        try:
+            with connection.cursor() as cursor:
+                
+                sql = "INSERT INTO hired_employees (employee, entry_date, department_id, job_id) VALUES (%s, %s, %s, %s)"
+                
+                cursor.executemany(sql, hired_employee_to_insert)
+        
+            # Commit the transaction
+            connection.commit()
+        
+        finally:
+            connection.close()
+        
+        response = ['Hired employee/s added successfully.']
+        
+        return {
+            'statusCode': 200,
+            'headers': {
+                'Content-Type': 'application/json'
+            },
+            'body': json.dumps(response)
+        }
             
     except ClientError as e:
         print('Error:', e)
@@ -216,6 +289,16 @@ def delete_jobs(request_body):
         finally:
             connection.close()
             
+        response = ['Deletion completed.']
+        
+        return {
+            'statusCode': 200,
+            'headers': {
+                'Content-Type': 'application/json'
+            },
+            'body': json.dumps(response)
+        }
+            
     except ClientError as e:
         print('Error:', e)
         return {
@@ -240,6 +323,55 @@ def delete_departments(request_body):
         
         finally:
             connection.close()
+            
+        response = ['Deletion completed.']
+        
+        return {
+            'statusCode': 200,
+            'headers': {
+                'Content-Type': 'application/json'
+            },
+            'body': json.dumps(response)
+        }
+            
+    except ClientError as e:
+        print('Error:', e)
+        return {
+            'statusCode': 500,
+            'body': json.dumps({'error': str(e)})
+        }
+        
+def delete_hired_employees(request_body):
+    try:
+        connection = pymysql.connect(host = rds_host, user = db_username, passwd = db_password, db=db_name)
+        # Extract the value associated with the "job" key
+        hired_employee_to_delete = [
+            (item['employee'], item['entry_date'], item['department_id'], item['job_id'])
+            for item in request_body
+        ]
+        
+        try:
+            with connection.cursor() as cursor:
+
+                sql = "DELETE FROM hired_employees WHERE employee = %s AND entry_date = %s AND department_id = %s AND job_id = %s"
+
+                cursor.executemany(sql, hired_employee_to_insert)
+        
+            # Commit the transaction
+            connection.commit()
+        
+        finally:
+            connection.close()
+        
+        response = ['Hired employee/s deleted successfully.']
+        
+        return {
+            'statusCode': 200,
+            'headers': {
+                'Content-Type': 'application/json'
+            },
+            'body': json.dumps(response)
+        }
             
     except ClientError as e:
         print('Error:', e)
@@ -384,3 +516,225 @@ def build_response(status_code, body):
         },
         'body': json.dumps(body)
     }
+    
+def drop_jobs_table():
+    try:
+        connection = pymysql.connect(host=rds_host, user=db_username, passwd=db_password, db=db_name)
+        
+        try:
+            with connection.cursor() as cursor:
+                # SQL statement to drop the jobs table
+                drop_sql = "DROP TABLE IF EXISTS jobs;"
+                
+                # Execute the SQL statement
+                cursor.execute(drop_sql)
+                
+            connection.commit()  # Commit the change
+        
+        finally:
+            connection.close()
+            
+        response = ['Table "jobs" dropped successfully.']
+        
+        return {
+            'statusCode': 200,
+            'headers': {
+                'Content-Type': 'application/json'
+            },
+            'body': json.dumps(response)
+        }
+            
+    except ClientError as e:
+        print('Error:', e)
+        return {
+            'statusCode': 500,
+            'body': json.dumps({'error': str(e)})
+        }
+
+def create_jobs_table():
+    try:
+        connection = pymysql.connect(host=rds_host, user=db_username, passwd=db_password, db=db_name)
+        
+        try:
+            with connection.cursor() as cursor:
+                # SQL statement to create the jobs table
+                create_sql = """
+                CREATE TABLE IF NOT EXISTS jobs (
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    job VARCHAR(255) NOT NULL
+                );
+                """
+                
+                # Execute the SQL statement
+                cursor.execute(create_sql)
+                
+            connection.commit()  # Commit the change
+        
+        finally:
+            connection.close()
+        
+        response = ['Table "jobs" created successfully.']
+        
+        return {
+            'statusCode': 200,
+            'headers': {
+                'Content-Type': 'application/json'
+            },
+            'body': json.dumps(response)
+        }
+            
+    except ClientError as e:
+        print('Error:', e)
+        return {
+            'statusCode': 500,
+            'body': json.dumps({'error': str(e)})
+        }
+
+def drop_departments_table():
+    try:
+        connection = pymysql.connect(host=rds_host, user=db_username, passwd=db_password, db=db_name)
+        
+        try:
+            with connection.cursor() as cursor:
+                # SQL statement to drop the departments table
+                drop_sql = "DROP TABLE IF EXISTS departments;"
+                
+                # Execute the SQL statement
+                cursor.execute(drop_sql)
+                
+            connection.commit()  # Commit the change
+        
+        finally:
+            connection.close()
+            
+        response = ['Table "departments" dropped successfully.']
+        
+        return {
+            'statusCode': 200,
+            'headers': {
+                'Content-Type': 'application/json'
+            },
+            'body': json.dumps(response)
+        }
+            
+    except ClientError as e:
+        print('Error:', e)
+        return {
+            'statusCode': 500,
+            'body': json.dumps({'error': str(e)})
+        }
+
+def create_departments_table():
+    try:
+        connection = pymysql.connect(host=rds_host, user=db_username, passwd=db_password, db=db_name)
+        
+        try:
+            with connection.cursor() as cursor:
+                # SQL statement to create the departments table
+                create_sql = """
+                CREATE TABLE IF NOT EXISTS departments (
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    department VARCHAR(255) NOT NULL
+                );
+                """
+                
+                # Execute the SQL statement
+                cursor.execute(create_sql)
+                
+            connection.commit()  # Commit the change
+        
+        finally:
+            connection.close()
+        
+        response = ['Table "departments" created successfully.']
+        
+        return {
+            'statusCode': 200,
+            'headers': {
+                'Content-Type': 'application/json'
+            },
+            'body': json.dumps(response)
+        }
+            
+    except ClientError as e:
+        print('Error:', e)
+        return {
+            'statusCode': 500,
+            'body': json.dumps({'error': str(e)})
+        }
+
+def drop_hired_employees_table():
+    try:
+        connection = pymysql.connect(host=rds_host, user=db_username, passwd=db_password, db=db_name)
+        
+        try:
+            with connection.cursor() as cursor:
+                # SQL statement to drop the departments table
+                drop_sql = "DROP TABLE IF EXISTS hired_employees;"
+                
+                # Execute the SQL statement
+                cursor.execute(drop_sql)
+                
+            connection.commit()  # Commit the change
+        
+        finally:
+            connection.close()
+            
+        response = ['Table "hired_employees" dropped successfully.']
+        
+        return {
+            'statusCode': 200,
+            'headers': {
+                'Content-Type': 'application/json'
+            },
+            'body': json.dumps(response)
+        }
+            
+    except ClientError as e:
+        print('Error:', e)
+        return {
+            'statusCode': 500,
+            'body': json.dumps({'error': str(e)})
+        }
+
+def create_hired_employees_table():
+    try:
+        connection = pymysql.connect(host=rds_host, user=db_username, passwd=db_password, db=db_name)
+        
+        try:
+            with connection.cursor() as cursor:
+                # SQL statement to create the departments table
+                create_sql = """
+                CREATE TABLE IF NOT EXISTS hired_employees (
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    employee VARCHAR(255),
+                    entry_date VARCHAR(255),
+                    department_id INT,
+                    job_id INT
+                );
+                """
+                
+                # Execute the SQL statement
+                cursor.execute(create_sql)
+                
+            connection.commit()  # Commit the change
+        
+        finally:
+            connection.close()
+        
+        response = ['Table "hired_employees" created successfully.']
+        
+        return {
+            'statusCode': 200,
+            'headers': {
+                'Content-Type': 'application/json'
+            },
+            'body': json.dumps(response)
+        }
+            
+    except ClientError as e:
+        print('Error:', e)
+        return {
+            'statusCode': 500,
+            'body': json.dumps({'error': str(e)})
+        }

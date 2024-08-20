@@ -1,4 +1,5 @@
 import json
+import os
 import requests
 import logging
 
@@ -6,7 +7,7 @@ logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 def lambda_handler(event, context):
-    url = 'https://example.com/api'  # Replace with your API endpoint
+    url = os.environ.get('STATUS_URL')  # Replace with your API endpoint
     
     try:
         logger.info('Making API request to %s', url)
@@ -15,13 +16,7 @@ def lambda_handler(event, context):
 
         if response.status_code == 200:
             data = response.json()
-            return {
-                'statusCode': 200,
-                'body': json.dumps({
-                    'message': 'Request was successful',
-                    'data': data
-                })
-            }
+            return data
         else:
             return {
                 'statusCode': response.status_code,
