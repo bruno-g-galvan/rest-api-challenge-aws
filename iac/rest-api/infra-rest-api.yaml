@@ -12,7 +12,7 @@ Parameters:
   RDSMonitoringRole:
     Description: The name of the database
     Type: String
-    Default: "arn:aws:iam::${AWS::AccountId}:role/rds-monitoring-role" 
+    Default: "arn:aws:iam::316328384763:role/rds-monitoring-role" 
   MasterUsername:
     Description: The master username for the database
     Type: String
