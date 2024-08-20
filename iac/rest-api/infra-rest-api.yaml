@@ -9,6 +9,10 @@ Parameters:
     Description: The name of the database
     Type: String
     Default: RestApiDBInstance
+  RDSMonitoringRole:
+    Description: The name of the database
+    Type: String
+    Default: "arn:aws:iam::${AWS::AccountId}:role/rds-monitoring-role" 
   MasterUsername:
     Description: The master username for the database
     Type: String
@@ -139,7 +143,7 @@ Resources:
       OptionGroupName: default:mysql-8-0
       DBParameterGroupName: default.mysql8.0
       MonitoringInterval: 60
-      MonitoringRoleArn: "arn:aws:iam::316328384763:role/rds-monitoring-role"
+      MonitoringRoleArn: !Ref RDSMonitoringRole
       AutoMinorVersionUpgrade: true
       DeletionProtection: false
 
