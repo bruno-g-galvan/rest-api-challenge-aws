@@ -1,6 +1,49 @@
+## AWS Infrastructure Overview for the Globant Challenge
+
+In this project, we've designed a robust AWS infrastructure to support a scalable and reliable REST API. Our solution leverages several AWS services to ensure seamless operation and high availability. Below is an overview of the key components and how they interact to deliver the functionality required for the Globant challenge.
+
+**1. API Gateway:**
+
+* **Purpose:** Acts as the entry point for all client requests, providing a secure and scalable API interface.
+* **Configuration:** Manages different API methods and routes, and integrates with Lambda functions to handle various operations.
+
+**2. AWS Lambda:**
+
+* **Purpose:** Handles business logic and processes requests without the need for managing servers.
+* **Configuration:** Deployed functions manage API requests, perform data processing, and interact with other AWS services as needed.
+
+**3. Amazon RDS (MySQL):**
+
+* **Purpose:** Serves as the primary data store for the application.
+* **Configuration:** Hosts the MySQL database with tables for departments, jobs, and employees, ensuring data persistence and reliability.
+
+**4. Amazon S3:**
+
+* **Purpose:** Provides storage for CSV files and other static content.
+* **Configuration:** Used to upload and manage data files that are ingested into the RDS database through Lambda functions.
+
+**5. AWS Glue:**
+
+* **Purpose:** Facilitates ETL (Extract, Transform, Load) operations.
+* **Configuration:** Applies transformations to data before loading it into the MySQL database, ensuring data is properly formatted and integrated.
+
+**6. AWS CloudFormation:**
+
+* **Purpose:** Automates the deployment and management of the AWS infrastructure.
+* **Configuration:** Defines and provisions AWS resources using infrastructure-as-code principles to ensure consistent and repeatable deployments.
+
+**7. API Monitoring and Logging:**
+
+* **Purpose:** Ensures visibility into API performance and operational health.
+* **Configuration:** Uses AWS CloudWatch to monitor Lambda function performance and logs API requests and errors for troubleshooting and optimization.
+
+This infrastructure is designed to handle the demands of the Globant challenge efficiently while maintaining flexibility and scalability for future enhancements.
+
+![1724127650884](image/README/1724127650884.png)
+
 ## Description of the AWS Glue Job for Bulk Data Insertion
 
-This AWS Glue job is designed to perform bulk data insertion into a MySQL database from CSV files stored in an S3 bucket. It utilizes Spark's distributed processing capabilities to efficiently handle large datasets, ensuring that data is read, transformed, and written to the target database with minimal overhead. 
+This AWS Glue job is designed to perform bulk data insertion into a MySQL database from CSV files stored in an S3 bucket. It utilizes Spark's distributed processing capabilities to efficiently handle large datasets, ensuring that data is read, transformed, and written to the target database with minimal overhead.
 
 ### Job Overview
 
