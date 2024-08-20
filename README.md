@@ -39,7 +39,7 @@ In this project, we've designed a robust AWS infrastructure to support a scalabl
 
 This infrastructure is designed to handle the demands of the Globant challenge efficiently while maintaining flexibility and scalability for future enhancements.
 
-![1724127650884](image/README/1724127650884.png)
+![1724185432587](image/README/1724185432587.png)
 
 ## Description of the AWS Glue Job for Bulk Data Insertion
 
