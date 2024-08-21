@@ -34,7 +34,7 @@ This infrastructure is designed to handle the demands of the Globant challenge e
 
 ## AWS Infrastructure Diagram for the Globant Challenge
 
-![1724199761580](image/README/1724199761580.png)
+![1724261010446](image/README/1724261010446.png)
 
 ## RestApiChallenge - API Technical Documentation
 
