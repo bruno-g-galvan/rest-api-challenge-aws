@@ -92,6 +92,8 @@ Resources:
       - "arn:aws:iam::aws:policy/AWSGlueConsoleFullAccess" 
       - "arn:aws:iam::aws:policy/AmazonAPIGatewayAdministrator"
       - "arn:aws:iam::aws:policy/AmazonSESFullAccess"
+      - "arn:aws:iam::aws:policy/CloudWatchEventsFullAccess"
+      - "arn:aws:iam::aws:policy/CloudWatchLogsFullAccess"
       Tags:
       - Key: "ManagedBy"
         Value: "CloudFormation"

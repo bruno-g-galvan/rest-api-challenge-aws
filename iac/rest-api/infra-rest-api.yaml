@@ -229,6 +229,39 @@ Resources:
       MaxRetries: 0
       Timeout: 30
 
+  LambdaFailureAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmDescription: "Alarm when AutoTestingLambdaFunction fails"
+      MetricName: Errors
+      Namespace: AWS/Lambda
+      Statistic: Sum
+      Period: 300
+      EvaluationPeriods: 1
+      Threshold: 1
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      Dimensions:
+        - Name: AutoTestingFailureAlarm
+          Value: !Ref AutoTestingLambdaFunction
+      AlarmActions:
+        - !Ref MySNSTopic
+      OKActions:
+        - !Ref MySNSTopic
+      InsufficientDataActions:
+        - !Ref MySNSTopic
+
+  MySNSTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName: "AutoTestingLambdaFunction Notifications"
+
+  MySNSTopicSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Protocol: email
+      Endpoint: bruno.gab.galvan@gmail.com
+      TopicArn: !Ref MySNSTopic
+
 Outputs:
   LambdaFunctionArn:
     Description: ARN of the Lambda Function
