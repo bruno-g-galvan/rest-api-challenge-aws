@@ -355,7 +355,7 @@ def delete_hired_employees(request_body):
 
                 sql = "DELETE FROM hired_employees WHERE employee = %s AND entry_date = %s AND department_id = %s AND job_id = %s"
 
-                cursor.executemany(sql, hired_employee_to_insert)
+                cursor.executemany(sql, hired_employee_to_delete)
         
             # Commit the transaction
             connection.commit()
