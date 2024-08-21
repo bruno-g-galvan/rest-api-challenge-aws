@@ -241,7 +241,7 @@ Resources:
       Threshold: 1
       ComparisonOperator: GreaterThanOrEqualToThreshold
       Dimensions:
-        - Name: AutoTestingFailureAlarm
+        - Name: FunctionName
           Value: !Ref AutoTestingLambdaFunction
       AlarmActions:
         - !Ref MySNSTopic
