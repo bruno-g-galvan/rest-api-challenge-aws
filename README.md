@@ -1,3 +1,7 @@
+## AWS Infrastructure Diagram
+
+![1724261010446](image/README/1724261010446.png)
+
 ## AWS Infrastructure Overview
 
 In this project, I've designed a robust AWS infrastructure to support a scalable and reliable REST API. Our solution leverages several AWS services to ensure seamless operation and high availability. Below is an overview of the key components and how they interact to deliver the functionality.
@@ -29,10 +33,6 @@ In this project, I've designed a robust AWS infrastructure to support a scalable
 **7. API Monitoring and Logging:**
 
 * Ensures visibility into API performance and operational health. Uses AWS CloudWatch to monitor Lambda function performance and logs API requests and errors for troubleshooting and optimization.
-
-## AWS Infrastructure Diagram
-
-![1724261010446](image/README/1724261010446.png)
 
 ## RestApiChallenge - API Technical Documentation
 
