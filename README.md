@@ -1,6 +1,6 @@
-## AWS Infrastructure Overview for the Globant Challenge
+## AWS Infrastructure Overview
 
-In this project, I've designed a robust AWS infrastructure to support a scalable and reliable REST API. Our solution leverages several AWS services to ensure seamless operation and high availability. Below is an overview of the key components and how they interact to deliver the functionality required for the Globant Challenge.
+In this project, I've designed a robust AWS infrastructure to support a scalable and reliable REST API. Our solution leverages several AWS services to ensure seamless operation and high availability. Below is an overview of the key components and how they interact to deliver the functionality.
 
 **1. API Gateway:**
 
@@ -30,9 +30,7 @@ In this project, I've designed a robust AWS infrastructure to support a scalable
 
 * Ensures visibility into API performance and operational health. Uses AWS CloudWatch to monitor Lambda function performance and logs API requests and errors for troubleshooting and optimization.
 
-This infrastructure is designed to handle the demands of the Globant challenge efficiently while maintaining flexibility and scalability for future enhancements.
-
-## AWS Infrastructure Diagram for the Globant Challenge
+## AWS Infrastructure Diagram
 
 ![1724261010446](image/README/1724261010446.png)
 
